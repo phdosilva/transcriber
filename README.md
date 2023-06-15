@@ -56,3 +56,29 @@ $ virtualenv venv
 $ virtualenv -p path_to_python venv
 $ source venv/bin/activate
 ```
+
+to genereate requirements in your project
+```
+pip freeze > requirements.txt
+```
+
+to install all the requirements:
+```
+$ pip install -r requirements.txt
+```
+
+if your process is killed:
+```
+$ pip install -r requirements.txt --no-cache-dir
+```
+
+and to check:
+```
+$ pip freeze
+```
+
+to endup your venv:
+```
+deactivate
+```
+
