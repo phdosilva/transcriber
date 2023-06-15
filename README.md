@@ -34,6 +34,18 @@ server {
 ```
 Save this file.
 
+https://docs.rackspace.com/support/how-to/limit-file-upload-size-in-nginx/#:~:text=Edit%20the%20upload%20file%20size%20value%201%20Edit,systemd%20systemctl%20restart%20nginx%20sysvinit%20service%20nginx%20restart
+```
+vim /etc/nginx/nginx.conf
+```
+```
+    http {
+        ...
+        client_max_body_size 100M;
+    }
+```
+
+
 Restart the nginx server
 ```
 sudo service nginx restart
