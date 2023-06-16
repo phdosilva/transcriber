@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, UploadFile, File, BackgroundTasks
+from fastapi import FastAPI, Request, UploadFile, BackgroundTasks
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -13,12 +13,6 @@ templates = Jinja2Templates(directory="templates")
 
 interview = Interview()
 
-# def save_file(file: UploadFile):
-#     with open(f"handled_files/audio.wav", "wb") as temp_file:
-#         content = file.read()
-#         temp_file.write(content)
-#     return speaker_identifier.start_diarization()
-
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -26,7 +20,7 @@ async def root(request: Request):
     return templates.TemplateResponse("upload_file.html", {"request": request})
 
 
-@app.post("/uploadfile/", response_model=dict[str, str])
+@app.post("/uploadfile/")
 async def upload_media_file(file: UploadFile, background: BackgroundTasks):
     background.add_task(interview.start_diarization)
     try:
@@ -41,7 +35,7 @@ async def upload_media_file(file: UploadFile, background: BackgroundTasks):
     return {"message": f"Successfully uploaded {file.filename}"}
 
 
-@app.get("/health", response_model=str)
+@app.get("/health")
 async def get_service_health():
     """Return service health"""
     return {"OK"}
