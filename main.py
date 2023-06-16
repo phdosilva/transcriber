@@ -14,7 +14,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 interview = Interview()
+
 CHUNK_SIZE = 1024
+
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
@@ -23,18 +25,39 @@ async def root(request: Request):
 
 
 @app.post("/uploadfile/")
-async def upload_media_file(background: BackgroundTasks, file: UploadFile = File(...)):
-    background.add_task(interview.start_diarization)
+async def upload_media_file(file: UploadFile = File(...)):
+    if interview.get_state() != 0:
+        return {"message": "There is something being processed. Try again latter."}
+    interview.set_uploading_file()
+
     try:
         async with aiofiles.open("./handled_files/audio.wav", "wb") as f:
             while chunk := await file.read(CHUNK_SIZE):
                 await f.write(chunk)
+            interview.set_running_file()
     except Exception as error:
-        return {"message": "There was an error uploading the file", "error": {"type": type(error).__name__, "args": error.args}}
+        interview.set_free()
+        return {"message": "There was an error uploading the file",
+                "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
 
     return {"message": f"Successfully uploaded {file.filename}"}
+
+
+@app.post("/status/")
+async def status():
+    return {"state": interview.get_state()}
+
+
+@app.post("/start_diarization/")
+async def start_diarization():
+    try:
+        interview.start_diarization()
+
+    except Exception as error:
+        return {"error": {"type": type(error).__name__, "args": error.args}}
+    return {"message": "Diarization Started"}
 
 
 @app.get("/health")
