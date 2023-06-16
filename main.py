@@ -28,7 +28,7 @@ async def upload_media_file(file: UploadFile, background: BackgroundTasks):
         with open(f"handled_files/audio.wav", "wb") as f:
             f.write(contents)
     except Exception as error:
-        return {"message": "There was an error uploading the file", "error": error}
+        return {"message": "There was an error uploading the file", "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
 
