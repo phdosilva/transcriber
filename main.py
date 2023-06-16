@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import aiofiles
+
 from speaker_identifier import Interview
 
 app = FastAPI()
@@ -21,10 +23,10 @@ async def root(request: Request):
 
 
 @app.post("/uploadfile/")
-async def upload_media_file(file: UploadFile, background: BackgroundTasks):
+async def upload_media_file(file: UploadFile, background: BackgroundTasks, aiofiles=None):
     background.add_task(interview.start_diarization)
     try:
-        async with open(f"handled_files/audio.wav", "wb") as f:
+        async with aiofiles.open(f"handled_files/audio.wav", "wb") as f:
             contents = await file.file.read()
             await f.write(contents)
     except Exception as error:
