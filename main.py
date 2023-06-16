@@ -23,7 +23,7 @@ async def root(request: Request):
 
 
 @app.post("/uploadfile/")
-async def upload_media_file(file: UploadFile, background: BackgroundTasks, aiofiles=None):
+async def upload_media_file(file: UploadFile, background: BackgroundTasks):
     background.add_task(interview.start_diarization)
     try:
         async with aiofiles.open(f"handled_files/audio.wav", "wb") as f:
