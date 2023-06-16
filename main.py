@@ -26,9 +26,9 @@ async def root(request: Request):
 async def upload_media_file(background: BackgroundTasks, file: UploadFile = File(...)):
     background.add_task(interview.start_diarization)
     try:
-        async with aiofiles.open("./handled_files/audio.wav", "wb") as f:
-            contents = await file.file.read()
-            await f.write(contents)
+        contents = file.file.read()
+        with aiofiles.open("./handled_files/audio.wav", "wb") as f:
+            f.write(contents)
     except Exception as error:
         return {"message": "There was an error uploading the file", "error": {"type": type(error).__name__, "args": error.args}}
     finally:
