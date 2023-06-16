@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, UploadFile, BackgroundTasks
+from fastapi import FastAPI, Request, UploadFile, BackgroundTasks, File, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -23,10 +23,10 @@ async def root(request: Request):
 
 
 @app.post("/uploadfile/")
-async def upload_media_file(file: UploadFile, background: BackgroundTasks):
+async def upload_media_file(background: BackgroundTasks, file: UploadFile = File(...), data: str = Form(...)):
     background.add_task(interview.start_diarization)
     try:
-        async with aiofiles.open(f"handled_files/audio.wav", "wb") as f:
+        async with aiofiles.open("./handled_files/audio.wav", "wb") as f:
             contents = await file.file.read()
             await f.write(contents)
     except Exception as error:
