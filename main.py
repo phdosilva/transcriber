@@ -15,14 +15,13 @@ templates = Jinja2Templates(directory="templates")
 
 CHUNK_SIZE = 1024
 
-interview: Interview = Interview()
+conductor: Interview = Interview()
 
 
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    """User access to interface"""
-    return templates.TemplateResponse("upload_file.html", {"request": request})
-
+@app.get("/")
+async def root():
+    """Will be used to show a User Interface"""
+    return {}
 
 @app.post("/upload")
 async def upload_media_file(file: UploadFile = File(...)):
@@ -31,17 +30,23 @@ async def upload_media_file(file: UploadFile = File(...)):
         async with aiofiles.open(f"./handled_files/{file.filename}", "wb") as f:
             while chunk := await file.read(CHUNK_SIZE):
                 await f.write(chunk)
+
+            conductor.diarization(file.filename)
     except Exception as error:
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
 
-    # Needs no signalise to conductor that the upload has been succeeded
-    return {"message": f"Successfully uploaded {file.filename}", "file": {"name": file.filename, "size": file.size}}
+    return {"message": f"Successfully uploaded {file.filename}", "file": {"name": file.filename, "size": f"{file.size} bytes"}}
 
-
-@app.get("/health")
-async def get_service_health():
-    """Return service health"""
-    return {"OK"}
+@app.get("/diarization")
+def get_diarization():
+    """Access Diarization File"""
+    try:
+        with open("./handled_files/diarization.txt", "rb") as file:
+            content: bytes = file.read()
+            return {"diarization": str(content)}
+    except Exception as error:
+        return {"message": "There was an erros with getting diartization.txt file",
+                "error": {"type": type(error).__name__, "args": error.args}}
