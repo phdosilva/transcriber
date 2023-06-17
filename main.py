@@ -17,11 +17,10 @@ async def root():
 async def upload_media_file(file: UploadFile = File(...)):
     """Upload the interview file to start"""
     try:
-        async with aiofiles.open(f"./handled_files/{file.filename}", "wb") as f:
-            while chunk := await file.read(CHUNK_SIZE):
-                await f.write(chunk)
-
-            print("File has been downloaded!")
+        with open(f"./handled_files/{file.filename}", "wb") as f:
+            content: bytes = file.read()
+            f.write(content)
+        print("File has been downloaded!")
     except Exception as error:
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
