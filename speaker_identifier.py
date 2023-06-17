@@ -9,11 +9,11 @@ class Interview:
 
     def diarization(self, filename) -> None:
         try:
-            DEMO_FILE = {"uri": "blabal", "audio": f"/handled_files/{filename}"}
+            DEMO_FILE = {"uri": "blabal", "audio": f"./handled_files/{filename}"}
             diarization = self.pipeline(DEMO_FILE)
 
-            with open(f"./handled_files/{filename}-diarization.txt", "w") as text_file:
-                text_file.write(str(diarization))
+            with open(f"./handled_files/diarization.txt", "wb") as text_file:
+                text_file.write(diarization)
         except Exception as error:
             raise Exception("There is an error with diarization", error.args)
 
