@@ -22,3 +22,8 @@ class Diarization:
             raise Exception("There is an error with diarization", error.args)
         finally:
             print("Diarization ended")
+
+if __name__ == "__main__":
+    dia = Diarization()
+    filename = input("digit the filename:")
+    dia.start(filename)
