@@ -112,3 +112,4 @@ sudo kill -9 `sudo lsof -t -i:8000`
 # References to further implementations
 https://stackoverflow.com/questions/73442335/how-to-upload-a-large-file-%E2%89%A53gb-to-fastapi-backend
 
+https://stackoverflow.com/questions/63169865/how-to-do-multiprocessing-in-fastapi
