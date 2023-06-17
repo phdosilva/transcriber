@@ -1,27 +1,17 @@
-from fastapi import FastAPI, Request, UploadFile, BackgroundTasks, File
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import aiofiles
 
-from speaker_identifier import Interview
-
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-templates = Jinja2Templates(directory="templates")
-
 CHUNK_SIZE = 1024
-
-conductor: Interview = Interview()
-
 
 @app.get("/")
 async def root():
     """Will be used to show a User Interface"""
-    return {}
+    return {"message": "Go to /docs to test the API"}
 
 @app.post("/upload")
 async def upload_media_file(file: UploadFile = File(...)):
@@ -31,13 +21,14 @@ async def upload_media_file(file: UploadFile = File(...)):
             while chunk := await file.read(CHUNK_SIZE):
                 await f.write(chunk)
 
-            await conductor.diarization(file.filename)
+            print("File has been downloaded!")
     except Exception as error:
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
 
+    print("Responding the request")
     return {"message": f"Successfully uploaded {file.filename}", "file": {"name": file.filename, "size": f"{file.size} bytes"}}
 
 @app.get("/diarization")
