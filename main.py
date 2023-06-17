@@ -1,12 +1,10 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
+from speaker_identifier import Diarization
 
-import aiofiles
 
 app = FastAPI()
+diarization = Diarization()
 
-CHUNK_SIZE = 1024
 
 @app.get("/")
 async def root():
@@ -14,20 +12,19 @@ async def root():
     return {"message": "Go to /docs to test the API"}
 
 @app.post("/upload")
-async def upload_media_file(file: UploadFile = File(...)):
+async def upload_media_file(background: BackgroundTasks, file: UploadFile = File(...)):
     """Upload the interview file to start"""
     try:
         with open(f"./handled_files/{file.filename}", "wb") as f:
-            content: bytes = file.read()
+            content: bytes = await file.read()
             f.write(content)
+        background.add_task(diarization.start, file.filename)
         print("File has been downloaded!")
     except Exception as error:
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
-
-    print("Responding the request")
     return {"message": f"Successfully uploaded {file.filename}", "file": {"name": file.filename, "size": f"{file.size} bytes"}}
 
 @app.get("/diarization")

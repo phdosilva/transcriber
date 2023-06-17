@@ -2,12 +2,12 @@ from pyannote.audio import Pipeline
 from typing import Callable
 import os
 
-class Interview:
+class Diarization:
     def __init__(self):
         self.pipeline: Callable = Pipeline.from_pretrained("pyannote/speaker-diarization@2.1",
                                                            use_auth_token=os.environ.get("HUGGINGFACE_TOKEN"))
 
-    async def diarization(self, filename) -> None:
+    def start(self, filename) -> None:
         try:
             DEMO_FILE = {"uri": "blabal", "audio": f"./handled_files/{filename}"}
             diarization = self.pipeline(DEMO_FILE)
