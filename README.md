@@ -11,6 +11,8 @@ Why and How to make a Requirements.txt: https://boscacci.medium.com/why-and-how-
 
 Limit File Upload Size in NGINX: https://docs.rackspace.com/support/how-to/limit-file-upload-size-in-nginx/#:~:text=Edit%20the%20upload%20file%20size%20value%201%20Edit,systemd%20systemctl%20restart%20nginx%20sysvinit%20service%20nginx%20restart
 
+Build an AI-driven SaaS Application: FULLSTACK Tutorial with Python, React, and AWS: https://www.youtube.com/watch?v=yxyyYMWu1ZA&ab_channel=pixegami
+
 # First start EC2
 ```
 sudo apt-get update 

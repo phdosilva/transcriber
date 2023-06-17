@@ -13,9 +13,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-interview = Interview()
-
 CHUNK_SIZE = 1024
+
+interview: Interview = Interview()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -24,55 +24,24 @@ async def root(request: Request):
     return templates.TemplateResponse("upload_file.html", {"request": request})
 
 
-@app.post("/uploadfile/")
+@app.post("/upload")
 async def upload_media_file(file: UploadFile = File(...)):
-    if interview.get_state() != 0:
-        return {"message": "There is something being processed. Try again latter."}
-    interview.set_uploading_file()
-
+    """Upload the interview file to start"""
     try:
-        async with aiofiles.open("./handled_files/audio.wav", "wb") as f:
+        async with aiofiles.open(f"./handled_files/{file.filename}", "wb") as f:
             while chunk := await file.read(CHUNK_SIZE):
                 await f.write(chunk)
-            interview.set_running_file()
     except Exception as error:
-        interview.set_free()
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
     finally:
         file.file.close()
 
-    return {"message": f"Successfully uploaded {file.filename}"}
-
-
-@app.post("/status/")
-async def status():
-    return {"state": interview.get_state()}
-
-
-@app.post("/start_diarization/")
-async def start_diarization():
-    try:
-        interview.start_diarization()
-
-    except Exception as error:
-        return {"error": {"type": type(error).__name__, "args": error.args}}
-    return {"message": "Diarization Started"}
+    # Needs no signalise to conductor that the upload has been succeeded
+    return {"message": f"Successfully uploaded {file.filename}", "file": {"name": file.filename, "size": file.size}}
 
 
 @app.get("/health")
 async def get_service_health():
     """Return service health"""
     return {"OK"}
-
-
-@app.get("/diarization")
-async def get_actual_diarization():
-    """Get the result from last audio speaker-diarization"""
-    try:
-        file = open("handled_files/diarization.txt", "r")
-        content = file.read()
-        file.close()
-        return {"diarization": content}
-    except:
-        return {"There is no audio diarization file"}
