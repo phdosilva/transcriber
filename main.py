@@ -31,7 +31,7 @@ async def upload_media_file(file: UploadFile = File(...)):
             while chunk := await file.read(CHUNK_SIZE):
                 await f.write(chunk)
 
-            conductor.diarization(file.filename)
+            await conductor.diarization(file.filename)
     except Exception as error:
         return {"message": "There was an error uploading the file",
                 "error": {"type": type(error).__name__, "args": error.args}}
