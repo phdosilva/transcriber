@@ -8,11 +8,13 @@ class Interview:
                                                            use_auth_token=os.environ.get("HUGGINGFACE_TOKEN"))
 
     def diarization(self, filename) -> None:
-        DEMO_FILE = {"uri": "blabal", "audio": f"/handled_files/{filename}"}
-        diarization = self.pipeline(DEMO_FILE)
+        try:
+            DEMO_FILE = {"uri": "blabal", "audio": f"/handled_files/{filename}"}
+            diarization = self.pipeline(DEMO_FILE)
 
-        with open(f"./handled_files/{filename}-diarization.txt", "w") as text_file:
-            text_file.write(str(diarization))
-
+            with open(f"./handled_files/{filename}-diarization.txt", "w") as text_file:
+                text_file.write(str(diarization))
+        except Exception as error:
+            raise Exception("There is an error with diarization", error.args)
 
         
