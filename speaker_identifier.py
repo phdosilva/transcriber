@@ -8,7 +8,7 @@ class Diarization:
         self.pipeline: Callable = Pipeline.from_pretrained("pyannote/speaker-diarization@2.1",
                                                            use_auth_token=os.environ.get("HUGGINGFACE_TOKEN"))
 
-    async def start(self, filename) -> None:
+    def start(self, filename) -> None:
         print(f"Starting diarization at {filename}")
         try:
             DEMO_FILE = {"uri": "blabal", "audio": f"./handled_files/{filename}"}
@@ -26,4 +26,6 @@ class Diarization:
 if __name__ == "__main__":
     dia = Diarization()
     filename = input("digit the filename:")
+    print(filename)
     dia.start(filename)
+
