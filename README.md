@@ -109,6 +109,31 @@ To kill a port proccess:
 sudo kill -9 `sudo lsof -t -i:8000`
 ```
 
+
+# Deploy on GCP
+https://towardsdatascience.com/deploy-your-ml-model-as-a-web-service-in-minutes-using-gcps-cloud-run-ee9d433d8787
+https://medium.datadriveninvestor.com/deploy-machine-learning-model-in-google-cloud-using-cloud-run-6ced8ba52aac
+https://datatonic.com/insights/deploying-machine-learning-models-google-cloud/
+https://www.amplemarket.com/blog/how-to-deploy-machine-learning-microservice-to-google-cloud-run
+https://www.youtube.com/watch?v=vieoHqt7pxo
+
+Deploy your own “ChatGPT” : https://medium.com/@giacomo.vianello/deploy-your-own-chatgpt-c012e762f6c0
+
+https://www.google.com/search?q=how+to+deploy+fastapi+in+vertex+ai&oq=how+to+deploy+fastapi+in+vertex+ai&aqs=edge..69i64j69i57.923j0j9&sourceid=chrome&ie=UTF-8
+https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/official/custom/SDK_Custom_Container_Prediction.ipynb
+
+
+
+Cloud build & deploy
+```
+gcloud builds submit --tag gcr.io/storied-link-390201/transcriber
+gcloud run deploy --image gcr.io/storied-link-390201/transcriber --platform managed
+```
+
+Serving machine learning models with FastAPI: It’s not all about speed: https://www.amplemarket.com/blog/serving-machine-learning-models-with-fastapi
+
+FastAPI documentation about container: https://fastapi.tiangolo.com/deployment/docker/
+
 # References to further implementations
 https://stackoverflow.com/questions/73442335/how-to-upload-a-large-file-%E2%89%A53gb-to-fastapi-backend
 
