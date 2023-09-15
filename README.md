@@ -138,3 +138,21 @@ https://www.google.com/search?q=how+to+deploy+fastapi+in+vertex+ai&oq=how+to+dep
 https://stackoverflow.com/questions/73442335/how-to-upload-a-large-file-%E2%89%A53gb-to-fastapi-backend
 
 https://stackoverflow.com/questions/63169865/how-to-do-multiprocessing-in-fastapi
+
+
+
+# Hardware Requirements
+
+As we saw above, Whisper is fairly easy to install. However it requires advanced hardware. A GPU is recommended if you want to use the large version of the model.
+
+If you use the whisper Python lib (see above) you will need around 10GB of RAM and 11GB of VRAM. It means that in practice you will need a 16GB GPU at least. It could be a NVIDIA Tesla T4 for example, or an NVIDIA A10.
+
+On a Tesla T4, you will transcribe 30 seconds of audio in around 6 seconds.
+Performance Considerations
+
+If you want to improve the default performance mentioned above, here are several strategies you can explore:
+
+    • Use a higher end GPU. For example you will get a better response time with GPUs using the Ampere platform like A10, A40, or A100.
+    • Work on batch inference in order to improve the throughput
+    • Leverage XLA compilation with Tensorflow or Jax
+    • Export the model to ONNX or TensorRT, and then serve it through the NVIDIA Triton Inference Server
