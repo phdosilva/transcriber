@@ -154,5 +154,8 @@ If you want to improve the default performance mentioned above, here are several
 
     • Use a higher end GPU. For example you will get a better response time with GPUs using the Ampere platform like A10, A40, or A100.
     • Work on batch inference in order to improve the throughput
+
+https://medium.com/zencore/hosting-a-whisper-api-on-gpu-with-gke-for-speech-transcription-88740f72d140
+
     • Leverage XLA compilation with Tensorflow or Jax
     • Export the model to ONNX or TensorRT, and then serve it through the NVIDIA Triton Inference Server
